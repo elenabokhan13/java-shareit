@@ -16,6 +16,7 @@ import java.util.Collection;
 public class ItemController {
 
     ItemService itemService;
+    private final static String USER_ID = "X-Sharer-User-Id";
 
     @Autowired
     public ItemController(ItemService itemService) {
@@ -23,33 +24,33 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader(USER_ID) Long userId) {
         log.info("Получен запрос к эндпойнту /items для создания предмета");
         return itemService.createItem(itemDto, userId);
     }
 
     @PatchMapping(value = "/{itemId}")
     public ItemDto updateItem(@PathVariable Long itemId, @RequestBody ItemDto itemDto,
-                              @RequestHeader("X-Sharer-User-Id") Long userId) {
-        log.info("Получен запрос к эндпойнту /items для обновления предмета по id " + itemId);
+                              @RequestHeader(USER_ID) Long userId) {
+        log.info("Получен запрос к эндпойнту /items для обновления предмета по id {}", itemId);
         return itemService.updateItem(itemId, itemDto, userId);
     }
 
     @GetMapping(value = "/{itemId}")
     public ItemDto getItem(@PathVariable Long itemId) {
-        log.info("Получен запрос к эндпойнту /items для получения предмета по id " + itemId);
+        log.info("Получен запрос к эндпойнту /items для получения предмета по id {}", itemId);
         return itemService.getItem(itemId);
     }
 
     @GetMapping
-    public Collection<ItemDto> getItemsByUser(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        log.info("Получен запрос к эндпойнту /items для получения предметов пользователя по id " + userId);
+    public Collection<ItemDto> getItemsByUser(@RequestHeader(USER_ID) Long userId) {
+        log.info("Получен запрос к эндпойнту /items для получения предметов пользователя по id {}", userId);
         return itemService.getItemsByUser(userId);
     }
 
     @GetMapping(value = "/search")
     public Collection<ItemDto> searchItems(@RequestParam String text) {
-        log.info("Получен запрос к эндпойнту /items для поиска предметов по запросу " + text);
+        log.info("Получен запрос к эндпойнту /items для поиска предметов по запросу {}", text);
         return itemService.searchItems(text);
     }
 }

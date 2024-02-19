@@ -19,4 +19,16 @@ public class ExceptionHandlers {
     public ErrorResponse objectNotFoundException(final ObjectNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse errorException(final Exception e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse forbidenException(final AccessForbidenError e) {
+        return new ErrorResponse(e.getMessage());
+    }
 }

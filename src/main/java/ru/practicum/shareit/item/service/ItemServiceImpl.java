@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exception.AccessForbidenError;
 import ru.practicum.shareit.exception.InvalidRequestException;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -48,7 +49,7 @@ public class ItemServiceImpl implements ItemService {
         }
         Item item = itemStorage.getItemById(itemId);
         if (!Objects.equals(item.getOwnerId(), userId)) {
-            throw new ObjectNotFoundException("У данного пользователя нет доступа к редактированию этого предмета.");
+            throw new AccessForbidenError("У данного пользователя нет доступа к редактированию этого предмета.");
         }
         return itemMapper.itemToDto(itemStorage.updateItem(itemId, itemDto.getName(), itemDto.getDescription(),
                 itemDto.getAvailable()));
@@ -61,9 +62,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> getItemsByUser(Long userId) {
-        return itemStorage.getItems().stream()
-                .filter(x -> Objects.equals(x.getOwnerId(), userId))
-                .map(itemMapper::itemToDto).collect(Collectors.toList());
+        return itemStorage.getItemsByUser(userId).stream().map(itemMapper::itemToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -71,12 +70,6 @@ public class ItemServiceImpl implements ItemService {
         if (Objects.equals(text, "")) {
             return new ArrayList<>();
         }
-
-        Collection<Item> items = itemStorage.getItems();
-        return items.stream()
-                .filter(x -> x.getName().toLowerCase().contains(text.toLowerCase())
-                        || x.getDescription().toLowerCase().contains(text.toLowerCase()))
-                .filter(Item::getAvailable)
-                .map(itemMapper::itemToDto).collect(Collectors.toList());
+        return itemStorage.searchItems(text).stream().map(itemMapper::itemToDto).collect(Collectors.toList());
     }
 }

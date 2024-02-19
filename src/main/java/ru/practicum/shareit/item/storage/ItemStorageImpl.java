@@ -6,11 +6,14 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class ItemStorageImpl implements ItemStorage {
     private final Map<Long, Item> items = new HashMap<>();
     Long id = 0L;
+
 
     @Override
     public Item createItem(Item item) {
@@ -40,6 +43,22 @@ public class ItemStorageImpl implements ItemStorage {
     @Override
     public Collection<Item> getItems() {
         return items.values();
+    }
+
+    @Override
+    public Collection<Item> getItemsByUser(Long userId) {
+        return getItems().stream()
+                .filter(x -> Objects.equals(x.getOwnerId(), userId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Item> searchItems(String text) {
+        return getItems().stream()
+                .filter(x -> x.getName().toLowerCase().contains(text.toLowerCase())
+                        || x.getDescription().toLowerCase().contains(text.toLowerCase()))
+                .filter(Item::getAvailable)
+                .collect(Collectors.toList());
     }
 
     @Override

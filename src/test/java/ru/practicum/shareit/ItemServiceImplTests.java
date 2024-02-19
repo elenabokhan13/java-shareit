@@ -3,6 +3,7 @@ package ru.practicum.shareit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.practicum.shareit.exception.AccessForbidenError;
 import ru.practicum.shareit.exception.InvalidRequestException;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -110,7 +111,7 @@ public class ItemServiceImplTests {
         userServiceImp.createUser(userOne);
         userServiceImp.createUser(userTwo);
         itemService.createItem(itemOne, 1L);
-        assertThrows(ObjectNotFoundException.class, () -> itemService.updateItem(1L, itemTwo, 2L));
+        assertThrows(AccessForbidenError.class, () -> itemService.updateItem(1L, itemTwo, 2L));
     }
 
     @Test

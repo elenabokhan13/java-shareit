@@ -11,5 +11,9 @@ public interface ItemStorage {
 
     Collection<Item> getItems();
 
+    Collection<Item> getItemsByUser(Long userId);
+
+    Collection<Item> searchItems(String text);
+
     Item getItemById(Long itemId);
 }

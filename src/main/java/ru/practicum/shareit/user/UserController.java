@@ -25,7 +25,7 @@ public class UserController {
 
     @GetMapping(value = "/{userId}")
     public UserDto getUserById(@PathVariable Long userId) {
-        log.info("Получен запрос к эндпойнту /users для получения пользователя по id " + userId);
+        log.info("Получен запрос к эндпойнту /users для получения пользователя по id {}", userId);
         return userService.getUserById(userId);
     }
 
@@ -44,13 +44,13 @@ public class UserController {
 
     @PatchMapping(value = "/{userId}")
     public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Long userId) {
-        log.info("Получен запрос к эндпойнту /users для обновления пользователя по id " + userId);
+        log.info("Получен запрос к эндпойнту /users для обновления пользователя по id {}", userId);
         return userService.updateUser(userDto, userId);
     }
 
     @DeleteMapping(value = "/{userId}")
     public void deleteUser(@PathVariable Long userId) {
-        log.info("Получен запрос к эндпойнту /users для удаления пользователя по id " + userId);
+        log.info("Получен запрос к эндпойнту /users для удаления пользователя по id {}", userId);
         userService.deleteUser(userId);
     }
 }
