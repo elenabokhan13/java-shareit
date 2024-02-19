@@ -14,7 +14,7 @@ import java.util.Collection;
 @RequestMapping("/items")
 @Slf4j
 public class ItemController {
-    private final static String USER_ID = "X-Sharer-User-Id";
+    private static final String USER_ID = "X-Sharer-User-Id";
     ItemService itemService;
 
     @Autowired
