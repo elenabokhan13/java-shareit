@@ -22,7 +22,6 @@ public class UserController {
         this.userService = userService;
     }
 
-
     @GetMapping(value = "/{userId}")
     public UserDto getUserById(@PathVariable Long userId) {
         log.info("Получен запрос к эндпойнту /users для получения пользователя по id {}", userId);
@@ -34,7 +33,6 @@ public class UserController {
         log.info("Получен запрос к эндпойнту /users для получения списка пользователя");
         return userService.getUsers();
     }
-
 
     @PostMapping
     public UserDto createUser(@RequestBody @Valid UserDto userDto) {

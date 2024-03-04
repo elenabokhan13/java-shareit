@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,20 +10,15 @@ import javax.persistence.*;
 @Data
 @Builder
 @Entity
-@Table(name = "items", schema = "public")
+@Table(name = "users", schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Item {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
+    private String name;
 
-    String description;
-
-    @Column(name = "owner_id")
-    Long ownerId;
-
-    Boolean available;
+    private String email;
 }
