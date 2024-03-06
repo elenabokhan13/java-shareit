@@ -37,7 +37,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "b.start_date > ?2 order by start_date desc", nativeQuery = true)
     Collection<Booking> findByOwnerIdFuture(Long userId, LocalDateTime current);
 
-    @Query(value = "select b.* from items as it LEFT JOIN  bookings as b  ON b.ITEM_ID = it.ID where " +
+    @Query(value = "select b.* from items as it LEFT JOIN  bookings as b  on b.item_id = it.id where " +
             "it.owner_id = ?1 AND b.OWNER_APPROVAL = ?2 order by start_date DESC", nativeQuery = true)
     Collection<Booking> findByOwnerIdStatus(Long userId, String status);
 

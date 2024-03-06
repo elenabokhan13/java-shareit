@@ -40,11 +40,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto postComment(Long userId, Long itemId, CommentDto commentDto) {
+    public CommentDto addComment(Long userId, Long itemId, CommentDto commentDto) {
         LocalDateTime currentTime = LocalDateTime.now();
         Comment comment = commentMapper.commentDtoToComment(commentDto);
-        itemRepository.findById(itemId)
-                .orElseThrow(() -> new ObjectNotFoundException("Данный предмет не существет"));
+        if (!itemRepository.existsById(itemId)) {
+            throw new ObjectNotFoundException("Данный предмет не существет");
+        }
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException("Данный пользователь не существет"));
         Collection<Booking> bookings = bookingRepository

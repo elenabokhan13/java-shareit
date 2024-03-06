@@ -106,8 +106,8 @@ public class CommentServiceImplTest {
 
         bookingOne = BookingDtoIncoming.builder()
                 .itemId(1L)
-                .start(LocalDateTime.of(2024, Month.MARCH, 5, 23, 23, 1, 1))
-                .end(LocalDateTime.of(2024, Month.MARCH, 5, 23, 23, 1, 2))
+                .start(LocalDateTime.of(2024, Month.MARCH, 14, 23, 23, 1, 1))
+                .end(LocalDateTime.of(2024, Month.MARCH, 15, 23, 23, 1, 2))
                 .build();
 
         commentOne = CommentDto.builder()
@@ -116,11 +116,11 @@ public class CommentServiceImplTest {
     }
 
     @Test
-    public void testCreateCommentBeforeEnd() {
+    public void testCreateCommentEndBeforeStart() {
         userServiceImp.createUser(userOne);
         userServiceImp.createUser(userTwo);
         itemService.createItem(itemOne, 1L);
         bookingService.createBooking(bookingOne, 2L);
-        assertThrows(InvalidRequestException.class, () -> commentService.postComment(2L, 1L, commentOne));
+        assertThrows(InvalidRequestException.class, () -> commentService.addComment(2L, 1L, commentOne));
     }
 }

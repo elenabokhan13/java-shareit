@@ -115,7 +115,9 @@ public class ItemServiceImplTests {
         itemService.createItem(itemOne, 1L);
         itemService.createItem(itemTwo, 1L);
         itemOne.setId(1L);
+        itemOne.setComments(List.of());
         itemTwo.setId(2L);
+        itemTwo.setComments(List.of());
         assertThat(itemService.getItemsByUser(1L)).isEqualTo(List.of(itemOne, itemTwo));
     }
 
@@ -125,6 +127,7 @@ public class ItemServiceImplTests {
         itemService.createItem(itemOne, 1L);
         itemService.createItem(itemTwo, 1L);
         itemOne.setId(1L);
+        itemOne.setComments(List.of());
         assertThat(itemService.searchItems("item1")).isEqualTo(List.of(itemOne));
     }
 
