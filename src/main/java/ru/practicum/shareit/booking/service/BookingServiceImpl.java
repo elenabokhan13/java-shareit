@@ -145,8 +145,8 @@ public class BookingServiceImpl implements BookingService {
                     return bookingRepository.findByOwnerIdCurrent(userId, currentTime, currentTime).stream()
                             .map(bookingMapper::bookingDto).collect(Collectors.toList());
                 case PAST:
-                    return bookingRepository.findByOwnerIdPast(userId, currentTime).stream().
-                            map(bookingMapper::bookingDto)
+                    return bookingRepository.findByOwnerIdPast(userId, currentTime).stream()
+                            .map(bookingMapper::bookingDto)
                             .collect(Collectors.toList());
                 case FUTURE:
                     return bookingRepository.findByOwnerIdFuture(userId, currentTime).stream()
