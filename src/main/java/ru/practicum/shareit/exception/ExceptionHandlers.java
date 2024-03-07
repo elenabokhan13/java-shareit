@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionHandlers {
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse serverException(final InvalidRequestException e) {
         return new ErrorResponse(e.getMessage());
     }
@@ -21,14 +21,14 @@ public class ExceptionHandlers {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse errorException(final Exception e) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse errorException(final ServerErrorException e) {
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse forbidenException(final AccessForbidenError e) {
+    public ErrorResponse forbiddenException(final AccessForbiddenError e) {
         return new ErrorResponse(e.getMessage());
     }
 }

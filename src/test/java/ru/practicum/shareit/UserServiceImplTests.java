@@ -1,30 +1,39 @@
 package ru.practicum.shareit;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
+import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.service.UserServiceImp;
-import ru.practicum.shareit.user.storage.UserStorage;
-import ru.practicum.shareit.user.storage.UserStorageImpl;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
+
+@DataJpaTest
+@Sql("/schema.sql")
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserServiceImplTests {
     private UserServiceImp userServiceImp;
+    @Autowired
+    private UserRepository userRepository;
+
     private UserDto userOne;
     private UserDto userTwo;
 
     @BeforeEach
     public void createMeta() {
-        UserStorage userStorage = new UserStorageImpl();
         UserMapper userMapper = new UserMapper();
-        userServiceImp = new UserServiceImp(userStorage, userMapper);
+
+        userServiceImp = new UserServiceImp(userRepository, userMapper);
         userOne = UserDto.builder()
                 .name("User1")
                 .email("user1@user.om")
@@ -55,7 +64,7 @@ public class UserServiceImplTests {
     public void testDeleteUser() {
         userServiceImp.createUser(userOne);
         userServiceImp.deleteUser(1L);
-        assertThrows(NullPointerException.class, () -> userServiceImp.getUserById(1L));
+        assertThrows(ObjectNotFoundException.class, () -> userServiceImp.getUserById(1L));
     }
 
     @Test

@@ -11,8 +11,7 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .bookings(countBookings(item.getId())).build();
-
+                .build();
     }
 
     public Item dtoToItem(ItemDto itemDto) {
@@ -20,7 +19,8 @@ public class ItemMapper {
                 .id(itemDto.getId())
                 .name(itemDto.getName())
                 .description(itemDto.getDescription())
-                .available(itemDto.getAvailable()).build();
+                .available(itemDto.getAvailable())
+                .build();
     }
 
     private Long countBookings(Long itemId) {
