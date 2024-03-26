@@ -8,6 +8,7 @@ import org.springframework.boot.test.json.JsonContent;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +20,7 @@ class CommentDtoTest {
 
     @Test
     public void test() throws IOException {
-        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.of(2024, Month.MARCH, 28, 15, 15, 15);
         CommentDto commentDto = CommentDto.builder()
                 .id(1L)
                 .text("Отличный предмет")
@@ -39,6 +40,6 @@ class CommentDtoTest {
 
         assertThat(result).hasJsonPath("$.created");
         assertThat(result).extractingJsonPathValue("$.created").isEqualTo(time.format(DateTimeFormatter
-                .ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")));
+                .ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
     }
 }
