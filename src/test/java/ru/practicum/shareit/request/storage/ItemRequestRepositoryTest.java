@@ -61,7 +61,7 @@ class ItemRequestRepositoryTest {
     }
 
     @Test
-    void findAllByOrderByCreatedAsc() {
+    void findAllByOrderByCreatedAscTest() {
         User userOne = User.builder()
                 .id(1L)
                 .name("Carl")

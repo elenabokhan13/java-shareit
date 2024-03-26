@@ -171,6 +171,56 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void updateBookingRejectedTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MARCH, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.APRIL, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .id(1L)
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .id(1L)
+                .name("item1")
+                .ownerId(1L)
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingOne = Booking.builder()
+                .status("WAITING")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        Booking bookingTwo = Booking.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        BookingDtoOutcoming bookingTwoDtoOut = BookingDtoOutcoming.builder()
+                .status("REJECTED")
+                .booker(userOne)
+                .item(itemOne)
+                .end(bookingOneDto.getEnd())
+                .start(bookingOneDto.getStart())
+                .build();
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingRepository.findById(anyLong())).thenReturn(Optional.ofNullable(bookingOne));
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.ofNullable(itemOne));
+        when(bookingRepository.save(any())).thenReturn(bookingTwo);
+        when(bookingMapper.bookingDto(any())).thenReturn(bookingTwoDtoOut);
+
+        BookingDtoOutcoming response = bookingService.updateBooking(1L, 1L, "false");
+        assertEquals(response, bookingTwoDtoOut);
+    }
+
+    @Test
     void updateBookingThrowObjectNotFoundExceptionForUserTest() {
         when(userRepository.existsById(anyLong())).thenReturn(false);
 
@@ -458,6 +508,221 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void getAllByUserCurrentTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MARCH, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.APRIL, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .id(1L)
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .id(1L)
+                .name("item1")
+                .ownerId(1L)
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingOne = Booking.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .end(bookingOneDto.getEnd())
+                .start(bookingOneDto.getStart())
+                .build();
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingMapper.bookingDto(any())).thenReturn(bookingOneDtoOut);
+        when(bookingRepository.findByBookerIdAndStartDateBeforeAndEndDateAfterOrderByStartDateDesc(any(), any(), any(),
+                any())).thenReturn(new PageImpl<>(List.of(bookingOne)));
+
+        Collection<BookingDtoOutcoming> response = bookingService.getAllByUser(1L, "CURRENT", 0, 10);
+        assertEquals(response.size(), 1);
+        assertTrue(response.contains(bookingOneDtoOut));
+    }
+
+    @Test
+    void getAllByUserPastTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MARCH, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.MARCH, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .id(1L)
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .id(1L)
+                .name("item1")
+                .ownerId(1L)
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingOne = Booking.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .end(bookingOneDto.getEnd())
+                .start(bookingOneDto.getStart())
+                .build();
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingMapper.bookingDto(any())).thenReturn(bookingOneDtoOut);
+        when(bookingRepository.findByBookerIdAndEndDateBeforeOrderByStartDateDesc(any(), any(), any()))
+                .thenReturn(new PageImpl<>(List.of(bookingOne)));
+
+        Collection<BookingDtoOutcoming> response = bookingService.getAllByUser(1L, "PAST", 0, 10);
+        assertEquals(response.size(), 1);
+        assertTrue(response.contains(bookingOneDtoOut));
+    }
+
+    @Test
+    void getAllByUserFutureTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MAY, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.MAY, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .id(1L)
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .id(1L)
+                .name("item1")
+                .ownerId(1L)
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingOne = Booking.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .end(bookingOneDto.getEnd())
+                .start(bookingOneDto.getStart())
+                .build();
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingMapper.bookingDto(any())).thenReturn(bookingOneDtoOut);
+        when(bookingRepository.findByBookerIdAndStartDateAfterOrderByStartDateDesc(any(), any(), any()))
+                .thenReturn(new PageImpl<>(List.of(bookingOne)));
+
+        Collection<BookingDtoOutcoming> response = bookingService.getAllByUser(1L, "FUTURE", 0, 10);
+        assertEquals(response.size(), 1);
+        assertTrue(response.contains(bookingOneDtoOut));
+    }
+
+    @Test
+    void getAllByUserWaitingTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MAY, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.MAY, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .id(1L)
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .id(1L)
+                .name("item1")
+                .ownerId(1L)
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingOne = Booking.builder()
+                .status("WAITING")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
+                .status("WAITING")
+                .booker(userOne)
+                .item(itemOne)
+                .end(bookingOneDto.getEnd())
+                .start(bookingOneDto.getStart())
+                .build();
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingMapper.bookingDto(any())).thenReturn(bookingOneDtoOut);
+        when(bookingRepository.findByBookerIdAndStatusEqualsOrderByStartDateDesc(any(), any(), any()))
+                .thenReturn(new PageImpl<>(List.of(bookingOne)));
+
+        Collection<BookingDtoOutcoming> response = bookingService.getAllByUser(1L, "WAITING", 0, 10);
+        assertEquals(response.size(), 1);
+        assertTrue(response.contains(bookingOneDtoOut));
+    }
+
+    @Test
+    void getAllByUserRejectedTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MAY, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.MAY, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .id(1L)
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .id(1L)
+                .name("item1")
+                .ownerId(1L)
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingOne = Booking.builder()
+                .status("REJECTED")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
+                .status("REJECTED")
+                .booker(userOne)
+                .item(itemOne)
+                .end(bookingOneDto.getEnd())
+                .start(bookingOneDto.getStart())
+                .build();
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingMapper.bookingDto(any())).thenReturn(bookingOneDtoOut);
+        when(bookingRepository.findByBookerIdAndStatusEqualsOrderByStartDateDesc(any(), any(), any()))
+                .thenReturn(new PageImpl<>(List.of(bookingOne)));
+
+        Collection<BookingDtoOutcoming> response = bookingService.getAllByUser(1L, "REJECTED", 0, 10);
+        assertEquals(response.size(), 1);
+        assertTrue(response.contains(bookingOneDtoOut));
+    }
+
+    @Test
     void getAllByUserThrowsObjectNotFoundExceptionTest() {
         when(userRepository.existsById(anyLong())).thenReturn(false);
 
@@ -532,6 +797,135 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void getAllByOwnerCurrentTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MARCH, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.APRIL, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .id(1L)
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .id(1L)
+                .name("item1")
+                .ownerId(1L)
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingOne = Booking.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .end(bookingOneDto.getEnd())
+                .start(bookingOneDto.getStart())
+                .build();
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingRepository.findByOwnerIdCurrent(anyLong(), any(), any(), any()))
+                .thenReturn(new PageImpl<>(List.of(bookingOne)));
+        when(bookingMapper.bookingDto(any())).thenReturn(bookingOneDtoOut);
+
+        Collection<BookingDtoOutcoming> response = bookingService.getAllByOwner(1L, "CURRENT", 0, 10);
+        assertEquals(response.size(), 1);
+        assertTrue(response.contains(bookingOneDtoOut));
+    }
+
+    @Test
+    void getAllByOwnerPastTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.FEBRUARY, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.FEBRUARY, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .id(1L)
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .id(1L)
+                .name("item1")
+                .ownerId(1L)
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingOne = Booking.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .end(bookingOneDto.getEnd())
+                .start(bookingOneDto.getStart())
+                .build();
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingRepository.findByOwnerIdPast(anyLong(), any(), any()))
+                .thenReturn(new PageImpl<>(List.of(bookingOne)));
+        when(bookingMapper.bookingDto(any())).thenReturn(bookingOneDtoOut);
+
+        Collection<BookingDtoOutcoming> response = bookingService.getAllByOwner(1L, "PAST", 0, 10);
+        assertEquals(response.size(), 1);
+        assertTrue(response.contains(bookingOneDtoOut));
+    }
+
+    @Test
+    void getAllByOwnerFutureTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MAY, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.MAY, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .id(1L)
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .id(1L)
+                .name("item1")
+                .ownerId(1L)
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingOne = Booking.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .endDate(bookingOneDto.getEnd())
+                .startDate(bookingOneDto.getStart())
+                .build();
+        BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
+                .status("APPROVED")
+                .booker(userOne)
+                .item(itemOne)
+                .end(bookingOneDto.getEnd())
+                .start(bookingOneDto.getStart())
+                .build();
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingRepository.findByOwnerIdFuture(anyLong(), any(), any()))
+                .thenReturn(new PageImpl<>(List.of(bookingOne)));
+        when(bookingMapper.bookingDto(any())).thenReturn(bookingOneDtoOut);
+
+        Collection<BookingDtoOutcoming> response = bookingService.getAllByOwner(1L, "FUTURE", 0, 10);
+        assertEquals(response.size(), 1);
+        assertTrue(response.contains(bookingOneDtoOut));
+    }
+
+    @Test
     void getAllByOwnerThrowsObjectNotFoundExceptionTest() {
         when(userRepository.existsById(anyLong())).thenReturn(false);
 
@@ -561,5 +955,71 @@ class BookingServiceImplTest {
 
         assertThrows(InvalidRequestException.class, () -> bookingService
                 .getAllByOwner(1L, "AKK", 0, 10));
+    }
+
+    @Test
+    void bookingValidationThrowInvalidRequestExceptionForEndBeforeTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MAY, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.APRIL, 8, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .name("item1")
+                .description("description item 1")
+                .available(true).build();
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(userOne));
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.ofNullable(itemOne));
+
+        assertThrows(InvalidRequestException.class, () -> bookingService.createBooking(bookingOneDto, 1L));
+    }
+
+    @Test
+    void bookingValidationThrowInvalidRequestExceptionForEndEqualsStartTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MAY, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.MAY, 5, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .name("item1")
+                .description("description item 1")
+                .available(true).build();
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(userOne));
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.ofNullable(itemOne));
+
+        assertThrows(InvalidRequestException.class, () -> bookingService.createBooking(bookingOneDto, 1L));
+    }
+
+    @Test
+    void bookingValidationThrowInvalidRequestExceptionForNotAvailableTest() {
+        BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
+                .itemId(1L)
+                .start(LocalDateTime.of(2024, Month.MAY, 5, 23, 23))
+                .end(LocalDateTime.of(2024, Month.JULY, 5, 23, 23))
+                .build();
+        User userOne = User.builder()
+                .name("User1")
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .name("item1")
+                .description("description item 1")
+                .available(false).build();
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(userOne));
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.ofNullable(itemOne));
+
+        assertThrows(InvalidRequestException.class, () -> bookingService.createBooking(bookingOneDto, 1L));
     }
 }

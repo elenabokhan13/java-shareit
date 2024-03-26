@@ -15,15 +15,4 @@ public class BookingMapper {
                 .id(booking.getId())
                 .build();
     }
-
-    public Booking dtoToBooking(BookingDtoOutcoming bookingDto) {
-        return Booking.builder()
-                .booker(bookingDto.getBooker())
-                .item(bookingDto.getItem())
-                .endDate(bookingDto.getEnd())
-                .startDate(bookingDto.getStart())
-                .status(bookingDto.getStatus())
-                .id(bookingDto.getId())
-                .build();
-    }
 }

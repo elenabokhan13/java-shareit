@@ -59,7 +59,7 @@ class CommentRepositoryTest {
 
 
     @Test
-    void findByItemId() {
+    void findByItemIdTest() {
         List<Comment> response = commentRepository.findByItemId(1L);
 
         assertEquals(response.size(), 2);

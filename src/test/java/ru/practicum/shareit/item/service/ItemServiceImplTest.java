@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.AccessForbiddenError;
 import ru.practicum.shareit.exception.InvalidRequestException;
@@ -16,8 +17,11 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -171,6 +175,50 @@ class ItemServiceImplTest {
     }
 
     @Test
+    void getItemWithBookingsTest() {
+        User userOne = User.builder()
+                .name("User1")
+                .email("user1@user.om")
+                .build();
+        Item itemOne = Item.builder()
+                .name("item1")
+                .description("description item 1")
+                .ownerId(1L)
+                .available(true).build();
+        ItemDto itemOneDto = ItemDto.builder()
+                .name("item1")
+                .description("description item 1")
+                .available(true).build();
+        Booking bookingLast = Booking.builder()
+                .booker(userOne)
+                .startDate(LocalDateTime.of(2024, Month.FEBRUARY, 1, 12, 12, 12))
+                .endDate(LocalDateTime.of(2024, Month.FEBRUARY, 2, 12, 12, 12))
+                .item(itemOne)
+                .status("APPROVED")
+                .build();
+        Booking bookingNext = Booking.builder()
+                .booker(userOne)
+                .startDate(LocalDateTime.of(2024, Month.APRIL, 1, 12, 12, 12))
+                .endDate(LocalDateTime.of(2024, Month.APRIL, 2, 12, 12, 12))
+                .item(itemOne)
+                .status("APPROVED")
+                .build();
+
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.ofNullable(itemOne));
+        when(commentRepository.findByItemId(anyLong())).thenReturn(List.of());
+        when(itemMapper.itemToDto(itemOne)).thenReturn(itemOneDto);
+        when(bookingRepository
+                .findTopByItemIdAndStartDateBeforeAndStatusOrderByEndDateDesc(any(), any(), any()))
+                .thenReturn(bookingLast);
+        when(bookingRepository
+                .findTopByItemIdAndStartDateAfterAndStatusOrderByStartDateAsc(any(), any(), any()))
+                .thenReturn(bookingNext);
+
+        ItemDto response = itemService.getItem(1L, 1L);
+        assertEquals(response, itemOneDto);
+    }
+
+    @Test
     void getItemThrowsObjectNotFoundExceptionTest() {
         when(itemRepository.findById(anyLong())).thenThrow(new ObjectNotFoundException("Данный предмет не существет"));
 
@@ -229,6 +277,22 @@ class ItemServiceImplTest {
 
         Collection<ItemDto> response = itemService.searchItems("description", 0, 10);
         assertEquals(response, List.of(itemOneDto));
+    }
+
+    @Test
+    void searchItemsRetuensEmptyArrayTest() {
+        Item itemOne = Item.builder()
+                .name("item1")
+                .description("description item 1")
+                .ownerId(1L)
+                .available(true).build();
+        ItemDto itemOneDto = ItemDto.builder()
+                .name("item1")
+                .description("description item 1")
+                .available(true).build();
+
+        Collection<ItemDto> response = itemService.searchItems("", 0, 10);
+        assertEquals(response, List.of());
     }
 
     @Test

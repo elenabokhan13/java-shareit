@@ -25,7 +25,7 @@ class ItemRepositoryTest {
     private EntityManager entityManager;
 
     @Test
-    void findByOwnerId() {
+    void findByOwnerIdTest() {
         User userOne = User.builder()
                 .name("Carl")
                 .email("carl@yandex.ru")
@@ -59,7 +59,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase() {
+    void findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseTest() {
         User userOne = User.builder()
                 .name("Carl")
                 .email("carl@yandex.ru")

@@ -119,7 +119,6 @@ public class ItemServiceImplIntegrationTests {
         itemTwo.setId(2L);
         itemTwo.setComments(List.of());
 
-        // Pageable pageable = PageRequest.of(0, 10);
         assertThat(itemService.getItemsByUser(1L, 0, 10)).isEqualTo(List.of(itemOne, itemTwo));
     }
 

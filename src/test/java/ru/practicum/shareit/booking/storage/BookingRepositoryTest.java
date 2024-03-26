@@ -100,7 +100,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBookerIdOrderByStartDateDesc() {
+    void findByBookerIdOrderByStartDateDescTest() {
         Collection<Booking> response = bookingRepository.findByBookerIdOrderByStartDateDesc(userOne.getId(),
                 Pageable.ofSize(10)).getContent();
 
@@ -110,7 +110,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBookerIdAndStartDateBeforeAndEndDateAfterOrderByStartDateDesc() {
+    void findByBookerIdAndStartDateBeforeAndEndDateAfterOrderByStartDateDescTest() {
         LocalDateTime time = LocalDateTime.now();
         Collection<Booking> response = bookingRepository
                 .findByBookerIdAndStartDateBeforeAndEndDateAfterOrderByStartDateDesc(userOne.getId(), time, time,
@@ -120,7 +120,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBookerIdAndEndDateBeforeOrderByStartDateDesc() {
+    void findByBookerIdAndEndDateBeforeOrderByStartDateDescTest() {
         LocalDateTime time = LocalDateTime.now();
         Collection<Booking> response = bookingRepository
                 .findByBookerIdAndEndDateBeforeOrderByStartDateDesc(userOne.getId(), time,
@@ -130,7 +130,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBookerIdAndStartDateAfterOrderByStartDateDesc() {
+    void findByBookerIdAndStartDateAfterOrderByStartDateDescTest() {
         LocalDateTime time = LocalDateTime.now();
         Collection<Booking> response = bookingRepository
                 .findByBookerIdAndStartDateAfterOrderByStartDateDesc(userTwo.getId(), time,
@@ -142,7 +142,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBookerIdAndStatusEqualsOrderByStartDateDesc() {
+    void findByBookerIdAndStatusEqualsOrderByStartDateDescTest() {
         Collection<Booking> response = bookingRepository
                 .findByBookerIdAndStatusEqualsOrderByStartDateDesc(userOne.getId(), "APPROVED",
                         Pageable.ofSize(10)).getContent();
@@ -151,7 +151,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwnerId() {
+    void findByOwnerIdTest() {
         Collection<Booking> response = bookingRepository.findByOwnerId(userTwo.getId(),
                 Pageable.ofSize(10)).getContent();
 
@@ -161,7 +161,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwnerIdCurrent() {
+    void findByOwnerIdCurrentTest() {
         LocalDateTime time = LocalDateTime.now();
         Collection<Booking> response = bookingRepository.findByOwnerIdCurrent(userTwo.getId(), time, time,
                 Pageable.ofSize(10)).getContent();
@@ -170,7 +170,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwnerIdPast() {
+    void findByOwnerIdPastTest() {
         LocalDateTime time = LocalDateTime.now();
         Collection<Booking> response = bookingRepository.findByOwnerIdPast(userTwo.getId(), time,
                 Pageable.ofSize(10)).getContent();
@@ -179,7 +179,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwnerIdFuture() {
+    void findByOwnerIdFutureTest() {
         LocalDateTime time = LocalDateTime.now();
         Collection<Booking> response = bookingRepository.findByOwnerIdFuture(userTwo.getId(), time,
                 Pageable.ofSize(10)).getContent();
@@ -192,7 +192,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwnerIdStatus() {
+    void findByOwnerIdStatusTest() {
         Collection<Booking> response = bookingRepository.findByOwnerIdStatus(userTwo.getId(), "WAITING",
                 Pageable.ofSize(10)).getContent();
 
@@ -200,7 +200,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findTopByItemIdAndStartDateBeforeAndStatusOrderByEndDateDesc() {
+    void findTopByItemIdAndStartDateBeforeAndStatusOrderByEndDateDescTest() {
         LocalDateTime time = LocalDateTime.now();
         Booking response = bookingRepository.findTopByItemIdAndStartDateBeforeAndStatusOrderByEndDateDesc(itemOne.getId(),
                 time, "WAITING");
@@ -209,7 +209,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findTopByItemIdAndStartDateAfterAndStatusOrderByStartDateAsc() {
+    void findTopByItemIdAndStartDateAfterAndStatusOrderByStartDateAscTest() {
         LocalDateTime time = LocalDateTime.now();
         Booking response = bookingRepository.findTopByItemIdAndStartDateAfterAndStatusOrderByStartDateAsc(itemOne.getId(),
                 time, "WAITING");
@@ -218,7 +218,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByItemIdAndBookerIdAndEndDateBeforeOrderByStartDateDesc() {
+    void findByItemIdAndBookerIdAndEndDateBeforeOrderByStartDateDescTest() {
         LocalDateTime time = LocalDateTime.now();
         Collection<Booking> response = bookingRepository.findByItemIdAndBookerIdAndEndDateBeforeOrderByStartDateDesc(itemOne.getId(),
                 userOne.getId(), time);
