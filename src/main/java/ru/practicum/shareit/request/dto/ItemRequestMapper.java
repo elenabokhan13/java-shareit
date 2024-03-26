@@ -13,7 +13,7 @@ public class ItemRequestMapper {
 
     private final ItemMapper itemMapper = new ItemMapper();
 
-    public ItemRequestDto ItemRequestToDto(ItemRequest itemRequest) {
+    public ItemRequestDto itemRequestToDto(ItemRequest itemRequest) {
         ItemRequestDto response = ItemRequestDto.builder()
                 .description(itemRequest.getDescription())
                 .id(itemRequest.getId())
@@ -27,7 +27,7 @@ public class ItemRequestMapper {
         return response;
     }
 
-    public ItemRequest ItemRequestFromDto(ItemRequestDto itemRequestDto) {
+    public ItemRequest itemRequestFromDto(ItemRequestDto itemRequestDto) {
         return ItemRequest.builder()
                 .id(itemRequestDto.getId())
                 .userId(itemRequestDto.getUserId())

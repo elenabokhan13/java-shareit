@@ -40,8 +40,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         LocalDateTime currentTime = LocalDateTime.now();
         request.setUserId(userId);
         request.setCreated(currentTime);
-        return itemRequestMapper.ItemRequestToDto(itemRequestRepository
-                .save(itemRequestMapper.ItemRequestFromDto(request)));
+        return itemRequestMapper.itemRequestToDto(itemRequestRepository
+                .save(itemRequestMapper.itemRequestFromDto(request)));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             throw new ObjectNotFoundException("Данный пользователь не существет");
         }
         return itemRequestRepository.getByUserIdOrderByCreatedAsc(userId).stream()
-                .map(itemRequestMapper::ItemRequestToDto).collect(Collectors.toList());
+                .map(itemRequestMapper::itemRequestToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         Pageable pageable = PageRequest.of(page, size);
         return itemRequestRepository.findAllByOrderByCreatedAsc(pageable).stream()
                 .filter(x -> !Objects.equals(x.getUserId(), userId))
-                .map(itemRequestMapper::ItemRequestToDto).collect(Collectors.toList());
+                .map(itemRequestMapper::itemRequestToDto).collect(Collectors.toList());
 
     }
 
@@ -80,6 +80,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (!itemRequestRepository.existsById(requestId)) {
             throw new ObjectNotFoundException("Данный реквест не существет");
         }
-        return itemRequestMapper.ItemRequestToDto(itemRequestRepository.getReferenceById(requestId));
+        return itemRequestMapper.itemRequestToDto(itemRequestRepository.getReferenceById(requestId));
     }
 }

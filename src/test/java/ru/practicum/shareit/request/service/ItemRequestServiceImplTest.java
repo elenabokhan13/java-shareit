@@ -53,7 +53,7 @@ class ItemRequestServiceImplTest {
 
         when(userRepository.existsById(anyLong())).thenReturn(true);
         when(itemRequestRepository.save(any())).thenReturn(requestOne);
-        when(itemRequestMapper.ItemRequestToDto(any())).thenReturn(requestDtoOne);
+        when(itemRequestMapper.itemRequestToDto(any())).thenReturn(requestDtoOne);
 
         ItemRequestDto response = itemRequestService.createItemRequest(requestDtoOne, 1L);
         assertEquals(response, requestDtoOne);
@@ -83,7 +83,7 @@ class ItemRequestServiceImplTest {
 
         when(userRepository.existsById(anyLong())).thenReturn(true);
         when(itemRequestRepository.getByUserIdOrderByCreatedAsc(anyLong())).thenReturn(List.of(requestOne));
-        when(itemRequestMapper.ItemRequestToDto(any(ItemRequest.class))).thenReturn(requestDtoOne);
+        when(itemRequestMapper.itemRequestToDto(any(ItemRequest.class))).thenReturn(requestDtoOne);
 
         Collection<ItemRequestDto> response = itemRequestService.getAllUserRequests(1L);
         assertEquals(response.size(), 1);
@@ -111,7 +111,7 @@ class ItemRequestServiceImplTest {
         when(userRepository.existsById(anyLong())).thenReturn(true);
         when(itemRequestRepository.findAllByOrderByCreatedAsc(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(requestOne)));
-        when(itemRequestMapper.ItemRequestToDto(any(ItemRequest.class))).thenReturn(requestDtoOne);
+        when(itemRequestMapper.itemRequestToDto(any(ItemRequest.class))).thenReturn(requestDtoOne);
 
         Collection<ItemRequestDto> response = itemRequestService.getAllRequests(0, 2, 2L);
         assertEquals(response.size(), 1);
@@ -149,7 +149,7 @@ class ItemRequestServiceImplTest {
         when(userRepository.existsById(anyLong())).thenReturn(true);
         when(itemRequestRepository.existsById(anyLong())).thenReturn(true);
         when(itemRequestRepository.getReferenceById(anyLong())).thenReturn(requestOne);
-        when(itemRequestMapper.ItemRequestToDto(any(ItemRequest.class))).thenReturn(requestDtoOne);
+        when(itemRequestMapper.itemRequestToDto(any(ItemRequest.class))).thenReturn(requestDtoOne);
 
         ItemRequestDto response = itemRequestService.getItemRequest(1L, 1L);
         assertEquals(response, requestDtoOne);
