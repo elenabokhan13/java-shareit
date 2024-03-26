@@ -29,5 +29,7 @@ public class ItemDto {
     @NotNull(message = "Введите статус")
     Boolean available;
 
+    Long requestId;
+
     List<CommentDto> comments;
 }

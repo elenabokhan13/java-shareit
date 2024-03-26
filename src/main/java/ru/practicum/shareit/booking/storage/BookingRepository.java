@@ -1,45 +1,50 @@
 package ru.practicum.shareit.booking.storage;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.booking.model.Booking;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    List<Booking> findByBookerIdOrderByStartDateDesc(Long userId);
+    Page<Booking> findByBookerIdOrderByStartDateDesc(Long userId, Pageable pageable);
 
-    List<Booking> findByBookerIdAndStartDateBeforeAndEndDateAfterOrderByStartDateDesc(Long userId,
+    Page<Booking> findByBookerIdAndStartDateBeforeAndEndDateAfterOrderByStartDateDesc(Long userId,
                                                                                       LocalDateTime current,
-                                                                                      LocalDateTime currentAnother);
+                                                                                      LocalDateTime currentAnother,
+                                                                                      Pageable pageable);
 
-    List<Booking> findByBookerIdAndEndDateBeforeOrderByStartDateDesc(Long userId, LocalDateTime current);
+    Page<Booking> findByBookerIdAndEndDateBeforeOrderByStartDateDesc(Long userId, LocalDateTime current,
+                                                                     Pageable pageable);
 
-    List<Booking> findByBookerIdAndStartDateAfterOrderByStartDateDesc(Long userId, LocalDateTime current);
+    Page<Booking> findByBookerIdAndStartDateAfterOrderByStartDateDesc(Long userId, LocalDateTime current,
+                                                                      Pageable pageable);
 
-    List<Booking> findByBookerIdAndStatusEqualsOrderByStartDateDesc(Long userId, String status);
+    Page<Booking> findByBookerIdAndStatusEqualsOrderByStartDateDesc(Long userId, String status, Pageable pageable);
 
-    @Query(value = "select distinct b.* from items as it join bookings as b where it.owner_id = ?1 order " +
+    @Query(value = "select b.* from items as it join bookings as b on b.item_id = it.id where it.owner_id = ?1 order " +
             "by start_date desc", nativeQuery = true)
-    Collection<Booking> findByOwnerId(Long userId);
+    Page<Booking> findByOwnerId(Long userId, Pageable pageable);
 
-    @Query(value = "select distinct b.* from items as it join bookings as b on b.ITEM_ID = it.ID where " +
+    @Query(value = "select distinct b.* from items as it join bookings as b on b.item_id = it.id where " +
             "it.owner_id = ?1 and b.start_date < ?2 and b.end_date > ?3 order by start_date desc", nativeQuery = true)
-    Collection<Booking> findByOwnerIdCurrent(Long userId, LocalDateTime current, LocalDateTime currentAnother);
+    Page<Booking> findByOwnerIdCurrent(Long userId, LocalDateTime current, LocalDateTime currentAnother,
+                                       Pageable pageable);
 
     @Query(value = "select distinct b.* from items as it join bookings as b where it.owner_id = ?1 and " +
             "b.end_date < ?2 order by start_date desc", nativeQuery = true)
-    Collection<Booking> findByOwnerIdPast(Long userId, LocalDateTime current);
+    Page<Booking> findByOwnerIdPast(Long userId, LocalDateTime current, Pageable pageable);
 
     @Query(value = "select distinct b.* from items as it join bookings as b where it.owner_id = ?1 and " +
             "b.start_date > ?2 order by start_date desc", nativeQuery = true)
-    Collection<Booking> findByOwnerIdFuture(Long userId, LocalDateTime current);
+    Page<Booking> findByOwnerIdFuture(Long userId, LocalDateTime current, Pageable pageable);
 
-    @Query(value = "select b.* from items as it LEFT JOIN  bookings as b  on b.item_id = it.id where " +
-            "it.owner_id = ?1 AND b.OWNER_APPROVAL = ?2 order by start_date DESC", nativeQuery = true)
-    Collection<Booking> findByOwnerIdStatus(Long userId, String status);
+    @Query(value = "select b.* from items as it LEFT JOIN  bookings as b on b.item_id = it.id where " +
+            "it.owner_id = ?1 and b.owner_approval = ?2 order by start_date DESC", nativeQuery = true)
+    Page<Booking> findByOwnerIdStatus(Long userId, String status, Pageable pageable);
 
     Booking findTopByItemIdAndStartDateBeforeAndStatusOrderByEndDateDesc(Long itemId, LocalDateTime current,
                                                                          String status);

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import ru.practicum.shareit.booking.dto.BookingDtoIncoming;
 import ru.practicum.shareit.booking.dto.BookingDtoOutcoming;
@@ -30,10 +30,10 @@ import java.util.Collection;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DataJpaTest
+@SpringBootTest
 @Sql("/schema.sql")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class BookingServiceImplTests {
+public class BookingServiceImplIntegrationTests {
     private BookingServiceImpl bookingService;
     private ItemServiceImpl itemService;
     @Autowired
@@ -110,6 +110,7 @@ public class BookingServiceImplTests {
         userServiceImp.createUser(userTwo);
         itemService.createItem(itemOne, 1L);
         BookingDtoOutcoming bookingDtoOutcoming = bookingService.createBooking(bookingOne, 2L);
+
         assertThat(bookingDtoOutcoming.getId()).isEqualTo(1L);
         assertThat(bookingDtoOutcoming.getBooker().getId()).isEqualTo(2L);
         assertThat(bookingDtoOutcoming.getItem().getId()).isEqualTo(1L);
@@ -123,6 +124,7 @@ public class BookingServiceImplTests {
         itemService.createItem(itemOne, 1L);
         bookingService.createBooking(bookingOne, 2L);
         BookingDtoOutcoming bookingDtoOutcoming = bookingService.updateBooking(1L, 1L, "true");
+
         assertThat(bookingDtoOutcoming.getId()).isEqualTo(1L);
         assertThat(bookingDtoOutcoming.getBooker().getId()).isEqualTo(2L);
         assertThat(bookingDtoOutcoming.getItem().getId()).isEqualTo(1L);
@@ -136,6 +138,7 @@ public class BookingServiceImplTests {
         itemService.createItem(itemOne, 1L);
         bookingService.createBooking(bookingOne, 2L);
         BookingDtoOutcoming bookingDtoOutcoming = bookingService.getBookingById(1L, 1L);
+
         assertThat(bookingDtoOutcoming.getId()).isEqualTo(1L);
         assertThat(bookingDtoOutcoming.getBooker().getId()).isEqualTo(2L);
         assertThat(bookingDtoOutcoming.getItem().getId()).isEqualTo(1L);
@@ -148,7 +151,9 @@ public class BookingServiceImplTests {
         userServiceImp.createUser(userTwo);
         itemService.createItem(itemOne, 1L);
         bookingService.createBooking(bookingOne, 2L);
-        Collection<BookingDtoOutcoming> bookingDtoOutcoming = bookingService.getAllByUser(2L, "ALL");
+        Collection<BookingDtoOutcoming> bookingDtoOutcoming = bookingService
+                .getAllByUser(2L, "ALL", 0, 10);
+
         assertThat(bookingDtoOutcoming.size()).isEqualTo(1);
         assertThat(bookingDtoOutcoming.iterator().next().getId()).isEqualTo(1L);
         assertThat(bookingDtoOutcoming.iterator().next().getBooker().getId()).isEqualTo(2L);
@@ -162,7 +167,9 @@ public class BookingServiceImplTests {
         userServiceImp.createUser(userTwo);
         itemService.createItem(itemOne, 1L);
         bookingService.createBooking(bookingOne, 2L);
-        Collection<BookingDtoOutcoming> bookingDtoOutcoming = bookingService.getAllByOwner(1L, "ALL");
+        Collection<BookingDtoOutcoming> bookingDtoOutcoming = bookingService
+                .getAllByOwner(1L, "ALL", 0, 10);
+
         assertThat(bookingDtoOutcoming.size()).isEqualTo(1);
         assertThat(bookingDtoOutcoming.iterator().next().getId()).isEqualTo(1L);
         assertThat(bookingDtoOutcoming.iterator().next().getBooker().getId()).isEqualTo(2L);
@@ -175,6 +182,7 @@ public class BookingServiceImplTests {
         userServiceImp.createUser(userOne);
         userServiceImp.createUser(userTwo);
         itemService.createItem(itemOne, 1L);
+
         assertThrows(ObjectNotFoundException.class, () -> bookingService.createBooking(bookingOne, 1L));
     }
 
@@ -185,6 +193,7 @@ public class BookingServiceImplTests {
         userServiceImp.createUser(userThree);
         itemService.createItem(itemOne, 1L);
         bookingService.createBooking(bookingOne, 2L);
+
         assertThrows(ObjectNotFoundException.class, () -> bookingService.getBookingById(1L, 3L));
     }
 }

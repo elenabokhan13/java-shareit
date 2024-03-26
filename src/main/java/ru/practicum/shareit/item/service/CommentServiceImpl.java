@@ -21,7 +21,6 @@ import java.util.Collection;
 @Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
-
     private final CommentMapper commentMapper;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;

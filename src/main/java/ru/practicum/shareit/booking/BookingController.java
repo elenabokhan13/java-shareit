@@ -53,19 +53,21 @@ public class BookingController {
 
     @GetMapping()
     public Collection<BookingDtoOutcoming> getUserBookings(@RequestHeader(USER_ID) Long userId,
-                                                           @RequestParam(defaultValue = "ALL") String state) {
+                                                           @RequestParam(defaultValue = "ALL") String state,
+                                                           @RequestParam(defaultValue = "0") int from,
+                                                           @RequestParam(defaultValue = "10") int size) {
         log.info("Получен запрос к эндпойнту /bookings для получение информации о бронированиях пользователя {}",
                 userId);
-        return bookingService.getAllByUser(userId, state);
+        return bookingService.getAllByUser(userId, state, from, size);
     }
 
     @GetMapping(value = "/owner")
     public Collection<BookingDtoOutcoming> getOwnerBookings(@RequestHeader(USER_ID) Long userId,
-                                                            @RequestParam(defaultValue = "ALL") String state) {
+                                                            @RequestParam(defaultValue = "ALL") String state,
+                                                            @RequestParam(defaultValue = "0") int from,
+                                                            @RequestParam(defaultValue = "10") int size) {
         log.info("Получен запрос к эндпойнту /bookings для получение информации о бронированиях вещей пользователя {}",
                 userId);
-        return bookingService.getAllByOwner(userId, state);
+        return bookingService.getAllByOwner(userId, state, from, size);
     }
-
-
 }
