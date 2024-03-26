@@ -535,8 +535,8 @@ class BookingServiceImplTest {
     void getAllByOwnerThrowsObjectNotFoundExceptionTest() {
         when(userRepository.existsById(anyLong())).thenReturn(false);
 
-        assertThrows(ObjectNotFoundException.class, () -> bookingService.
-                getAllByOwner(1L, "ALL", 0, 10));
+        assertThrows(ObjectNotFoundException.class, () -> bookingService
+                .getAllByOwner(1L, "ALL", 0, 10));
     }
 
     @Test
