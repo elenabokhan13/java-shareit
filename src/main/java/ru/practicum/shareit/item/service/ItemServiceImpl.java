@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDtoShort;
 import ru.practicum.shareit.booking.model.Booking;
@@ -30,7 +32,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ItemServiceImpl implements ItemService {
-
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
@@ -98,18 +99,35 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> getItemsByUser(Long userId) {
-        Collection<Item> items = itemRepository.findByOwnerId(userId);
+    public Collection<ItemDto> getItemsByUser(Long userId, int from, int size) {
+        if (size < 1) {
+            throw new InvalidRequestException("Размер выборки должен быть не меньше одного");
+        }
+        if (from < 0) {
+            throw new InvalidRequestException("Сортировка элементов не может быть с отрицательного индекса");
+        }
+        int page = from / size;
+        Pageable pageable = PageRequest.of(page, size);
+        List<Item> items = itemRepository.findByOwnerId(userId, pageable).getContent();
+
         return addLastNextBookingsForItems(items);
     }
 
     @Override
-    public Collection<ItemDto> searchItems(String text) {
+    public Collection<ItemDto> searchItems(String text, int from, int size) {
+        if (size < 1) {
+            throw new InvalidRequestException("Размер выборки должен быть не меньше одного");
+        }
+        if (from < 0) {
+            throw new InvalidRequestException("Сортировка элементов не может быть с отрицательного индекса");
+        }
         if (Objects.equals(text, "")) {
             return new ArrayList<>();
         }
+        int page = from / size;
+        Pageable pageable = PageRequest.of(page, size);
         return addLastNextBookingsForItems(itemRepository
-                .findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(text, text).stream()
+                .findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(text, text, pageable).stream()
                 .filter(Item::getAvailable).collect(Collectors.toList()));
     }
 
@@ -136,7 +154,7 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
-    private Collection<ItemDto> addLastNextBookingsForItems(Collection<Item> items) {
+    private Collection<ItemDto> addLastNextBookingsForItems(List<Item> items) {
         LocalDateTime currentTime = LocalDateTime.now();
         Map<Long, List<Booking>> bookings = bookingRepository.findAll().stream()
                 .collect(Collectors.groupingBy(o -> o.getItem().getId(),

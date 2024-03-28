@@ -54,15 +54,19 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ItemDto> getItemsByUser(@RequestHeader(USER_ID) Long userId) {
+    public Collection<ItemDto> getItemsByUser(@RequestHeader(USER_ID) Long userId,
+                                              @RequestParam(defaultValue = "0") int from,
+                                              @RequestParam(defaultValue = "10") int size) {
         log.info("Получен запрос к эндпойнту /items для получения предметов пользователя по id {}", userId);
-        return itemService.getItemsByUser(userId);
+        return itemService.getItemsByUser(userId, from, size);
     }
 
     @GetMapping(value = "/search")
-    public Collection<ItemDto> searchItems(@RequestParam String text) {
+    public Collection<ItemDto> searchItems(@RequestParam String text,
+                                           @RequestParam(defaultValue = "0") int from,
+                                           @RequestParam(defaultValue = "10") int size) {
         log.info("Получен запрос к эндпойнту /items для поиска предметов по запросу {}", text);
-        return itemService.searchItems(text);
+        return itemService.searchItems(text, from, size);
     }
 
     @PostMapping(value = "/{itemId}/comment")
