@@ -22,6 +22,7 @@ public class Validator {
             throw new InvalidRequestException("Сортировка элементов не может быть с отрицательного индекса");
         }
     }
+
     public static void validateUser(UserRepository userRepository, Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new ObjectNotFoundException("Данный пользователь не существет");
