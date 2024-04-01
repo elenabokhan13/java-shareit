@@ -9,7 +9,7 @@ services:
     depends_on:
       - server
     environment:
-     # - TZ=Moscow/Europe
+     # - TZ=Asia/Yekaterinburg
       - SHAREIT_SERVER_URL=http://server:9090
 
   server:
@@ -21,6 +21,7 @@ services:
     depends_on:
       - db
     environment:
+     # - TZ=Asia/Yekaterinburg
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=OrDer$P@$$
@@ -32,6 +33,7 @@ services:
     ports:
       - "6541:5432"
     environment:
+     # - TZ=Asia/Yekaterinburg
       - POSTGRES_PASSWORD=OrDer$P@$$
       - POSTGRES_USER=admin
       - POSTGRES_DB=shareit

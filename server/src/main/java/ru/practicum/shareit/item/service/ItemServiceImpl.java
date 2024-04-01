@@ -99,7 +99,7 @@ public class ItemServiceImpl implements ItemService {
         Validator.validateSizeAndFrom(from, size);
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size);
-        List<Item> items = itemRepository.findByOwnerId(userId, pageable).getContent();
+        List<Item> items = itemRepository.findByOwnerIdOrderById(userId, pageable).getContent();
 
         return addLastNextBookingsForItems(items);
     }

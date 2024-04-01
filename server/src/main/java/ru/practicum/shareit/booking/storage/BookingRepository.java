@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    Page<Booking> findByBookerIdOrderByStartDateDesc(Long userId, Pageable pageable);
+    @Query(value = "select b.* from bookings as b where b.booker_id = ?1 order " +
+            "by b.start_date desc", nativeQuery = true)
+    Page<Booking> findByBookerIdOrderByStartDate(Long userId, Pageable pageable);
 
     Page<Booking> findByBookerIdAndStartDateBeforeAndEndDateAfterOrderByStartDateDesc(Long userId,
                                                                                       LocalDateTime current,
@@ -26,24 +28,24 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Page<Booking> findByBookerIdAndStatusEqualsOrderByStartDateDesc(Long userId, String status, Pageable pageable);
 
     @Query(value = "select b.* from items as it join bookings as b on b.item_id = it.id where it.owner_id = ?1 order " +
-            "by start_date desc", nativeQuery = true)
+            "by b.start_date desc", nativeQuery = true)
     Page<Booking> findByOwnerId(Long userId, Pageable pageable);
 
     @Query(value = "select distinct b.* from items as it join bookings as b on b.item_id = it.id where " +
-            "it.owner_id = ?1 and b.start_date < ?2 and b.end_date > ?3 order by start_date desc", nativeQuery = true)
+            "it.owner_id = ?1 and b.start_date < ?2 and b.end_date > ?3 order by b.start_date desc", nativeQuery = true)
     Page<Booking> findByOwnerIdCurrent(Long userId, LocalDateTime current, LocalDateTime currentAnother,
                                        Pageable pageable);
 
-    @Query(value = "select distinct b.* from items as it join bookings as b where it.owner_id = ?1 and " +
-            "b.end_date < ?2 order by start_date desc", nativeQuery = true)
+    @Query(value = "select distinct b.* from items as it join bookings as b on b.item_id = it.id where it.owner_id = ?1 and " +
+            "b.end_date < ?2 order by b.start_date desc", nativeQuery = true)
     Page<Booking> findByOwnerIdPast(Long userId, LocalDateTime current, Pageable pageable);
 
-    @Query(value = "select distinct b.* from items as it join bookings as b where it.owner_id = ?1 and " +
-            "b.start_date > ?2 order by start_date desc", nativeQuery = true)
+    @Query(value = "select distinct b.* from items as it join bookings as b on b.item_id = it.id where it.owner_id = ?1 and " +
+            "b.start_date > ?2 order by b.start_date desc", nativeQuery = true)
     Page<Booking> findByOwnerIdFuture(Long userId, LocalDateTime current, Pageable pageable);
 
     @Query(value = "select b.* from items as it LEFT JOIN  bookings as b on b.item_id = it.id where " +
-            "it.owner_id = ?1 and b.owner_approval = ?2 order by start_date DESC", nativeQuery = true)
+            "it.owner_id = ?1 and b.owner_approval = ?2 order by b.start_date desc", nativeQuery = true)
     Page<Booking> findByOwnerIdStatus(Long userId, String status, Pageable pageable);
 
     Booking findTopByItemIdAndStartDateBeforeAndStatusOrderByEndDateDesc(Long itemId, LocalDateTime current,

@@ -498,7 +498,7 @@ class BookingServiceImplTest {
                 .build();
 
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(bookingRepository.findByBookerIdOrderByStartDateDesc(anyLong(), any()))
+        when(bookingRepository.findByBookerIdOrderByStartDate(anyLong(), any()))
                 .thenReturn(new PageImpl<>(List.of(bookingOne)));
         when(bookingMapper.bookingDto(any())).thenReturn(bookingOneDtoOut);
 

@@ -98,7 +98,7 @@ public class BookingServiceImpl implements BookingService {
         try {
             switch (State.valueOf(state)) {
                 case ALL:
-                    return bookingRepository.findByBookerIdOrderByStartDateDesc(userId, pageable).stream()
+                    return bookingRepository.findByBookerIdOrderByStartDate(userId, pageable).stream()
                             .map(bookingMapper::bookingDto).collect(Collectors.toList());
                 case CURRENT:
                     return bookingRepository.findByBookerIdAndStartDateBeforeAndEndDateAfterOrderByStartDateDesc(userId,

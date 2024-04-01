@@ -52,7 +52,7 @@ class ItemRepositoryTest {
         itemRepository.save(itemOne);
         itemRepository.save(itemTwo);
 
-        Collection<Item> response = itemRepository.findByOwnerId(1L, Pageable.ofSize(10)).getContent();
+        Collection<Item> response = itemRepository.findByOwnerIdOrderById(1L, Pageable.ofSize(10)).getContent();
 
         assertEquals(response.size(), 1);
         assert (response.contains(itemOne));

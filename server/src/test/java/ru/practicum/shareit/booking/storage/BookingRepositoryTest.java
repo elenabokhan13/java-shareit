@@ -101,7 +101,7 @@ class BookingRepositoryTest {
 
     @Test
     void findByBookerIdOrderByStartDateDescTest() {
-        Collection<Booking> response = bookingRepository.findByBookerIdOrderByStartDateDesc(userOne.getId(),
+        Collection<Booking> response = bookingRepository.findByBookerIdOrderByStartDate(userOne.getId(),
                 Pageable.ofSize(10)).getContent();
 
         assertEquals(response.size(), 2);
@@ -184,11 +184,9 @@ class BookingRepositoryTest {
         Collection<Booking> response = bookingRepository.findByOwnerIdFuture(userTwo.getId(), time,
                 Pageable.ofSize(10)).getContent();
 
-        assertEquals(response.size(), 4);
+        assertEquals(response.size(), 2);
         assert (response.contains(bookingThree));
         assert (response.contains(bookingOne));
-        assert (response.contains(bookingTwo));
-        assert (response.contains(bookingFour));
     }
 
     @Test

@@ -237,7 +237,7 @@ class ItemServiceImplTest {
                 .description("description item 1")
                 .available(true).build();
 
-        when(itemRepository.findByOwnerId(anyLong(), any())).thenReturn(new PageImpl<>(List.of(itemOne)));
+        when(itemRepository.findByOwnerIdOrderById(anyLong(), any())).thenReturn(new PageImpl<>(List.of(itemOne)));
         when(bookingRepository.findAll()).thenReturn(List.of());
         when(commentRepository.findAll()).thenReturn(List.of());
         when(itemMapper.itemToDto(itemOne)).thenReturn(itemOneDto);
