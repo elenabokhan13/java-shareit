@@ -50,7 +50,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public Collection<ItemRequestDto> getAllRequests(int from, int size, Long userId) {
-        Validator.validateSizeAndFrom(from, size);
         Validator.validateUser(userRepository, userId);
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size);

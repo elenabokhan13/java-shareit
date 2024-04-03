@@ -10,25 +10,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDtoIncoming;
 import ru.practicum.shareit.booking.dto.BookingDtoOutcoming;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.practicum.shareit.item.ItemController.USER_ID;
+import static ru.practicum.shareit.constant.Constant.USER_ID;
+
 
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerTest {
@@ -41,15 +37,14 @@ class BookingControllerTest {
 
     @Test
     void createBookingTest() throws Exception {
-        User userOne = User.builder()
+        UserDto userOne = UserDto.builder()
                 .name("User1")
                 .id(1L)
                 .email("user1@user.om")
                 .build();
-        Item itemOne = Item.builder()
+        ItemDto itemOne = ItemDto.builder()
                 .id(1L)
                 .name("item1")
-                .ownerId(1L)
                 .description("description item 1")
                 .available(true).build();
         BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
@@ -81,15 +76,14 @@ class BookingControllerTest {
 
     @Test
     void changeStatusBookingTest() throws Exception {
-        User userOne = User.builder()
+        UserDto userOne = UserDto.builder()
                 .name("User1")
                 .id(1L)
                 .email("user1@user.om")
                 .build();
-        Item itemOne = Item.builder()
+        ItemDto itemOne = ItemDto.builder()
                 .id(1L)
                 .name("item1")
-                .ownerId(1L)
                 .description("description item 1")
                 .available(true).build();
         BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
@@ -122,15 +116,14 @@ class BookingControllerTest {
 
     @Test
     void getBookingByIdTest() throws Exception {
-        User userOne = User.builder()
+        UserDto userOne = UserDto.builder()
                 .name("User1")
                 .id(1L)
                 .email("user1@user.om")
                 .build();
-        Item itemOne = Item.builder()
+        ItemDto itemOne = ItemDto.builder()
                 .id(1L)
                 .name("item1")
-                .ownerId(1L)
                 .description("description item 1")
                 .available(true).build();
         BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
@@ -161,15 +154,14 @@ class BookingControllerTest {
 
     @Test
     void getUserBookingsTest() throws Exception {
-        User userOne = User.builder()
+        UserDto userOne = UserDto.builder()
                 .name("User1")
                 .id(1L)
                 .email("user1@user.om")
                 .build();
-        Item itemOne = Item.builder()
+        ItemDto itemOne = ItemDto.builder()
                 .id(1L)
                 .name("item1")
-                .ownerId(1L)
                 .description("description item 1")
                 .available(true).build();
         BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()
@@ -201,15 +193,14 @@ class BookingControllerTest {
 
     @Test
     void getOwnerBookings() throws Exception {
-        User userOne = User.builder()
+        UserDto userOne = UserDto.builder()
                 .name("User1")
                 .id(1L)
                 .email("user1@user.om")
                 .build();
-        Item itemOne = Item.builder()
+        ItemDto itemOne = ItemDto.builder()
                 .id(1L)
                 .name("item1")
-                .ownerId(1L)
                 .description("description item 1")
                 .available(true).build();
         BookingDtoIncoming bookingOneDto = BookingDtoIncoming.builder()

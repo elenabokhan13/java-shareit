@@ -14,15 +14,6 @@ import ru.practicum.shareit.user.storage.UserRepository;
 import java.util.Objects;
 
 public class Validator {
-    public static void validateSizeAndFrom(int from, int size) {
-        if (size < 1) {
-            throw new InvalidRequestException("Размер выборки должен быть не меньше одного");
-        }
-        if (from < 0) {
-            throw new InvalidRequestException("Сортировка элементов не может быть с отрицательного индекса");
-        }
-    }
-
     public static void validateUser(UserRepository userRepository, Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new ObjectNotFoundException("Данный пользователь не существет");

@@ -28,9 +28,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -247,16 +245,6 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getItemsByUserThrowsInvalidRequestExceptionForSizeTest() {
-        assertThrows(InvalidRequestException.class, () -> itemService.getItemsByUser(1L, 0, 0));
-    }
-
-    @Test
-    void getItemsByUserThrowsInvalidRequestExceptionForFromTest() {
-        assertThrows(InvalidRequestException.class, () -> itemService.getItemsByUser(1L, -1, 1));
-    }
-
-    @Test
     void searchItemsTest() {
         Item itemOne = Item.builder()
                 .name("item1")
@@ -280,7 +268,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void searchItemsRetuensEmptyArrayTest() {
+    void searchItemsReturnsEmptyArrayTest() {
         Item itemOne = Item.builder()
                 .name("item1")
                 .description("description item 1")
@@ -293,15 +281,5 @@ class ItemServiceImplTest {
 
         Collection<ItemDto> response = itemService.searchItems("", 0, 10);
         assertEquals(response, List.of());
-    }
-
-    @Test
-    void searchItemsThrowsInvalidRequestExceptionForSizeTest() {
-        assertThrows(InvalidRequestException.class, () -> itemService.searchItems("description", 0, 0));
-    }
-
-    @Test
-    void searchItemsThrowsInvalidRequestExceptionForFromTest() {
-        assertThrows(InvalidRequestException.class, () -> itemService.searchItems("description", -1, 1));
     }
 }

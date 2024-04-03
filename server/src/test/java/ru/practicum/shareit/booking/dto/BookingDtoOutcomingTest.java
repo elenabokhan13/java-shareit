@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -25,15 +25,14 @@ class BookingDtoOutcomingTest {
         LocalDateTime start = LocalDateTime.of(2024, Month.APRIL, 10, 12, 01, 01);
         LocalDateTime end = LocalDateTime.of(2024, Month.APRIL, 12, 12, 01, 01);
 
-        Item item = Item.builder()
+        ItemDto item = ItemDto.builder()
                 .id(1L)
                 .name("Велосипед")
                 .description("Почти новый велосипед")
                 .available(true)
-                .ownerId(1L)
                 .build();
 
-        User user = User.builder()
+        UserDto user = UserDto.builder()
                 .id(1L)
                 .name("Паша")
                 .email("pasha@yandex.ru")

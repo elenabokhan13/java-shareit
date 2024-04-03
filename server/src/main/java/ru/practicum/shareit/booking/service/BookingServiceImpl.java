@@ -91,7 +91,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Collection<BookingDtoOutcoming> getAllByUser(Long userId, String state, int from, int size) {
         Validator.validateUser(userRepository, userId);
-        Validator.validateSizeAndFrom(from, size);
         LocalDateTime currentTime = LocalDateTime.now();
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size);
@@ -127,7 +126,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Collection<BookingDtoOutcoming> getAllByOwner(Long userId, String state, int from, int size) {
         Validator.validateUser(userRepository, userId);
-        Validator.validateSizeAndFrom(from, size);
         LocalDateTime currentTime = LocalDateTime.now();
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size);

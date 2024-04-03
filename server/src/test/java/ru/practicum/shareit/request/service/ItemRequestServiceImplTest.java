@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import ru.practicum.shareit.exception.InvalidRequestException;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
@@ -123,17 +122,6 @@ class ItemRequestServiceImplTest {
         when(userRepository.existsById(anyLong())).thenReturn(false);
         assertThrows(ObjectNotFoundException.class, () -> itemRequestService.getAllRequests(0, 2, 2L));
     }
-
-    @Test
-    void getAllRequestsThrowsInvalidRequestExceptionSizeTest() {
-        assertThrows(InvalidRequestException.class, () -> itemRequestService.getAllRequests(0, 0, 2L));
-    }
-
-    @Test
-    void getAllRequestsThrowsInvalidRequestExceptionFromTest() {
-        assertThrows(InvalidRequestException.class, () -> itemRequestService.getAllRequests(-1, 2, 2L));
-    }
-
 
     @Test
     void getItemRequestTest() {

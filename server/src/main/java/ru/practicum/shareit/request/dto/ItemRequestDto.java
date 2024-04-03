@@ -4,8 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.item.dto.ItemDto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +16,6 @@ public class ItemRequestDto {
 
     Long userId;
 
-    @NotBlank(message = "Введите описание предмета")
-    @NotEmpty(message = "Введите описание предмета")
     String description;
 
     @Builder.Default

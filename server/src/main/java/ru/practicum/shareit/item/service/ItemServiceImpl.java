@@ -21,12 +21,7 @@ import ru.practicum.shareit.validator.Validator;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,7 +91,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> getItemsByUser(Long userId, int from, int size) {
-        Validator.validateSizeAndFrom(from, size);
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size);
         List<Item> items = itemRepository.findByOwnerIdOrderById(userId, pageable).getContent();
@@ -106,7 +100,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> searchItems(String text, int from, int size) {
-        Validator.validateSizeAndFrom(from, size);
         if (Objects.equals(text, "")) {
             return new ArrayList<>();
         }

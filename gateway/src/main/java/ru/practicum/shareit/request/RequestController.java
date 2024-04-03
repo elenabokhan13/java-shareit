@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import static ru.practicum.shareit.item.ItemController.USER_ID;
+import static ru.practicum.shareit.constant.Constant.USER_ID;
 
 @Controller
 @RequestMapping(path = "/requests")

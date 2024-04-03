@@ -13,8 +13,10 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.InvalidRequestException;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
@@ -24,9 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -44,9 +44,15 @@ class BookingServiceImplTest {
     @Mock
     private BookingMapper bookingMapper;
 
+    private UserMapper userMapper;
+    private ItemMapper itemMapper;
+
     @BeforeEach
     public void setUp() {
         bookingService = new BookingServiceImpl(userRepository, bookingRepository, itemRepository, bookingMapper);
+
+        userMapper = new UserMapper();
+        itemMapper = new ItemMapper();
     }
 
     @Test
@@ -73,8 +79,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("WAITING")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -154,8 +160,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingTwoDtoOut = BookingDtoOutcoming.builder()
                 .status("APPROVED")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -204,8 +210,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingTwoDtoOut = BookingDtoOutcoming.builder()
                 .status("REJECTED")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -367,8 +373,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("WAITING")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -491,8 +497,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("WAITING")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -534,8 +540,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("APPROVED")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -577,8 +583,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("APPROVED")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -620,8 +626,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("APPROVED")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -663,8 +669,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("WAITING")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -706,8 +712,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("REJECTED")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -728,30 +734,6 @@ class BookingServiceImplTest {
 
         assertThrows(ObjectNotFoundException.class, () -> bookingService
                 .getAllByUser(1L, "ALL", 0, 10));
-    }
-
-    @Test
-    void getAllByUserThrowsInvalidRequestExceptionForSizeTest() {
-        when(userRepository.existsById(anyLong())).thenReturn(true);
-
-        assertThrows(InvalidRequestException.class, () -> bookingService
-                .getAllByUser(1L, "ALL", 0, 0));
-    }
-
-    @Test
-    void getAllByUserThrowsInvalidRequestExceptionForFromTest() {
-        when(userRepository.existsById(anyLong())).thenReturn(true);
-
-        assertThrows(InvalidRequestException.class, () -> bookingService
-                .getAllByUser(1L, "ALL", -1, 10));
-    }
-
-    @Test
-    void getAllByUserThrowsInvalidRequestExceptionForStateTest() {
-        when(userRepository.existsById(anyLong())).thenReturn(true);
-
-        assertThrows(InvalidRequestException.class, () -> bookingService
-                .getAllByUser(1L, "AKK", 0, 10));
     }
 
     @Test
@@ -781,8 +763,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("WAITING")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -823,8 +805,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("APPROVED")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -866,8 +848,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("APPROVED")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -909,8 +891,8 @@ class BookingServiceImplTest {
                 .build();
         BookingDtoOutcoming bookingOneDtoOut = BookingDtoOutcoming.builder()
                 .status("APPROVED")
-                .booker(userOne)
-                .item(itemOne)
+                .booker(userMapper.userToDto(userOne))
+                .item(itemMapper.itemToDto(itemOne))
                 .end(bookingOneDto.getEnd())
                 .start(bookingOneDto.getStart())
                 .build();
@@ -931,30 +913,6 @@ class BookingServiceImplTest {
 
         assertThrows(ObjectNotFoundException.class, () -> bookingService
                 .getAllByOwner(1L, "ALL", 0, 10));
-    }
-
-    @Test
-    void getAllByOwnerThrowsInvalidRequestExceptionForSizeTest() {
-        when(userRepository.existsById(anyLong())).thenReturn(true);
-
-        assertThrows(InvalidRequestException.class, () -> bookingService
-                .getAllByOwner(1L, "ALL", 0, 0));
-    }
-
-    @Test
-    void getAllByOwnerThrowsInvalidRequestExceptionForFromTest() {
-        when(userRepository.existsById(anyLong())).thenReturn(true);
-
-        assertThrows(InvalidRequestException.class, () -> bookingService
-                .getAllByOwner(1L, "ALL", -1, 10));
-    }
-
-    @Test
-    void getAllByOwnerThrowsInvalidRequestExceptionForStateTest() {
-        when(userRepository.existsById(anyLong())).thenReturn(true);
-
-        assertThrows(InvalidRequestException.class, () -> bookingService
-                .getAllByOwner(1L, "AKK", 0, 10));
     }
 
     @Test
